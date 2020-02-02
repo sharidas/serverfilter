@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to Server Filter{% endblock %}
+
+{% block body %}
+    <h1>Filters for the server</h1>
+
+    {{ form_start(form, { attr: { class: 'form-inline'} }) }}
+    <div class="dropdown">
+        {#{{ form_row(form.storageFilter) }}#}
+        {{ form_row(form.storage) }}
+    </div>
+    <div class="checkbox">
+        {{ form_row(form.ram) }}
+    </div>
+    <div class="dropdown">
+        {{ form_row(form.hdisk) }}
+    </div>
+    <div class="dropdown">
+        {{ form_row(form.location) }}
+    </div>
+    <div class="form-control-file">
+        {{ form_row(form.uploadFile) }}
+    </div>
+    <hr>
+    <button type="submit" class="btn">Submit</button>
+    {% set rowIndex = '1' %}
+    <table class="table">
+        <tr>
+            <th>Model</th>
+            <th>RAM</th>
+            <th>Harddisk</th>
+            <th>Location</th>
+            <th>Price</th>
+        </tr>
+        {% if data is defined %}
+            {#{{ dump(data) }}#}
+            {% set row = data %}
+            {% for columns in row %}
+                <tr>
+                {#{{ dump(column) }}#}
+                {% for key, value in columns %}
+                    {% if key != 'rowIndex' and key != 'startrow' %}
+                        <th>{{ value }}</th>
+                    {% endif %}
+                    {% if key == 'rowIndex' %}
+                        {% set rowIndex = value %}
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+    {{ form_end(form) }}
+    <ul class="pager">
+        <li><a href="#">Previous</a></li>
+        <li><a href="{{ path('viewserver', {storage: form.storage, ram: form.ram, hdisk: form.hdisk, location: form.location, offset: rowIndex}) }}">Next</a></li>
+    </ul>
+{% endblock %}
